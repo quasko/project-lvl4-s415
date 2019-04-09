@@ -1,7 +1,7 @@
 import React from 'react';
 import Channels from './Channels';
 import Chat from './Chat';
-import Field from './Field';
+import MessageForm from './MessageForm';
 
 
 const App = () => (
@@ -9,7 +9,7 @@ const App = () => (
     <Channels />
     <div className="col-9 d-flex flex-column">
       <Chat />
-      <Field />
+      <MessageForm />
     </div>
   </div>
 );
