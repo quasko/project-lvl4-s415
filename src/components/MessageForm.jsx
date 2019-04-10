@@ -5,7 +5,9 @@ import { Field, reduxForm } from 'redux-form';
 import * as actions from '../actions';
 
 const mapStateToProps = (state) => {
-  const props = {};
+  const props = {
+    message: state.message,
+  };
   return props;
 };
 
@@ -15,11 +17,18 @@ const actionCreators = {
 
 class MessageForm extends React.Component {
   onSubmit = ({ text }) => {
+    
     const { addMessage, reset } = this.props;
+    
     addMessage({
-      message: {
-        id: _.uniqueId(),
-        text,
+      data: {
+        attributes: {
+          message: {
+            id: _.uniqueId(),
+            date: new Date(),
+            text,
+          },
+        },
       },
     });
     reset();
