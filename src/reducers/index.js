@@ -20,17 +20,17 @@ const messageAddingState = handleActions(
 
 
 const messages = handleActions({
-  [actions.addMessageSuccess](state, { payload: { message: { data } } }) {
-    console.log('23 ', data);
+  [actions.addMessageSuccess](state, { payload: { message } }) {
+    const { attributes } = message.data;
+
     const { byId, allIds } = state;
-    const { message } = data.attributes;
+    
     return {
-      byId: { ...byId, [message.id]: message },
-      allIds: [...allIds, message.id],
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds: [...allIds, attributes.id],
     };
   },
   [actions.fetchMessagesSuccess](state, { payload }) {
-    console.log('33 ', payload);
     return {
       byId: _.keyBy(payload.messages, 'id'),
       allIds: payload.messages.map(m => m.id),

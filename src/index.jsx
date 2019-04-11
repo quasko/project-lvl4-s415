@@ -10,10 +10,14 @@ import reducers from './reducers';
 import App from './components/App';
 import { fetchMessages } from './actions';
 import { messages } from 'gon';
-// import faker from 'faker';
+
+
+
 // import gon from 'gon';
 // import cookies from 'js-cookie';
 // import io from 'socket.io-client';
+
+
 const store = createStore(
   reducers,
   compose(

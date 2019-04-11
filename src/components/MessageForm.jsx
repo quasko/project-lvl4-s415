@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import * as actions from '../actions';
 
+
 const mapStateToProps = (state) => {
   const props = {
     message: state.message,
@@ -15,7 +16,11 @@ const actionCreators = {
   addMessage: actions.addMessage,
 };
 
+
+
 class MessageForm extends React.Component {
+ 
+
   onSubmit = ({ text }) => {
     
     const { addMessage, reset } = this.props;
@@ -24,8 +29,8 @@ class MessageForm extends React.Component {
       data: {
         attributes: {
           message: {
-            id: _.uniqueId(),
-            date: new Date(),
+            //id: _.uniqueId(),
+            //date: new Date(),
             text,
           },
         },
@@ -33,17 +38,19 @@ class MessageForm extends React.Component {
     });
     reset();
   }
-
+  
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, submitting } = this.props;
+    console.log('form context ', this.context);
     return (
       <form className="d-flex" onSubmit={handleSubmit(this.onSubmit)}>
         <Field className="border w-100" name="text" required component="input" type="text" />
-        <button type="submit" className="btn btn-primary">Add</button>
+        <button type="submit" className="btn btn-primary" disabled={submitting}>Add</button>
       </form>
     );
   }
 }
+
 
 
 const ConnectedMessageForm = connect(mapStateToProps, actionCreators)(MessageForm);
