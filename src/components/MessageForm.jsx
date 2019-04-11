@@ -1,9 +1,9 @@
 import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
 import * as actions from '../actions';
-
+import UserContext from '../context';
 
 const mapStateToProps = (state) => {
   const props = {
@@ -16,32 +16,33 @@ const actionCreators = {
   addMessage: actions.addMessage,
 };
 
-
-
 class MessageForm extends React.Component {
- 
+  static contextType = UserContext;
 
-  onSubmit = ({ text }) => {
-    
+  onSubmit = async ({ text }) => {
     const { addMessage, reset } = this.props;
-    
-    addMessage({
-      data: {
-        attributes: {
-          message: {
-            //id: _.uniqueId(),
-            //date: new Date(),
-            text,
+    const { context } = this;
+    try {
+      await addMessage({
+        data: {
+          attributes: {
+            message: {
+              //id: _.uniqueId(),
+              date: new Date(),
+              name: context,
+              text,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (e) {
+      throw new SubmissionError(e);
+    }
     reset();
   }
-  
+
   render() {
     const { handleSubmit, submitting } = this.props;
-    console.log('form context ', this.context);
     return (
       <form className="d-flex" onSubmit={handleSubmit(this.onSubmit)}>
         <Field className="border w-100" name="text" required component="input" type="text" />
