@@ -6,19 +6,13 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import io from 'socket.io-client';
+
 import { messages } from 'gon';
-import cookies from 'js-cookie';
-import faker from 'faker';
+
 import reducers from './reducers';
 import App from './components/App';
-import { fetchMessages, pushMessage } from './actions';
+import { fetchMessages } from './actions';
 
-if (!cookies.get().userName) {
-  cookies.set('userName', faker.name.firstName());
-}
-
-const { userName } = cookies.get();
 
 const store = createStore(
   reducers,
@@ -28,12 +22,6 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ),
 );
-
-const socket = io();
-socket.on('newMessage', (m) => {
-  console.log('from io ', m.data);
-  store.dispatch(pushMessage(m, userName));
-});
 
 store.dispatch(fetchMessages(messages));
 

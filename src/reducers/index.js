@@ -38,12 +38,8 @@ const messages = handleActions({
       allIds: payload.messages.map(m => m.id),
     };
   },
-  [actions.pushMessageSuccess](state, { payload: { message, name } }) {
+  [actions.pushMessageSuccess](state, { payload: { message } }) {
     const { attributes } = message.data;
-
-    if (attributes.message.name === name) {
-      return state;
-    }
 
     const { byId, allIds } = state;
 

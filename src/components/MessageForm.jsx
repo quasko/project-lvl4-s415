@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const actionCreators = {
   addMessage: actions.addMessage,
 };
-
+@connect(mapStateToProps, actionCreators)
 class MessageForm extends React.Component {
   static contextType = UserContext;
 
@@ -54,9 +54,7 @@ class MessageForm extends React.Component {
   }
 }
 
-
-
-const ConnectedMessageForm = connect(mapStateToProps, actionCreators)(MessageForm);
+const ConnectedMessageForm = MessageForm;
 
 export default reduxForm({
   form: 'newMessage',

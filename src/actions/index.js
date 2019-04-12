@@ -14,9 +14,9 @@ export const pushMessageSuccess = createAction('MESSAGE_PUSH_SUCCESS');
 export const addMessage = message => async (dispatch) => {
   dispatch(addMessageRequest());
   try {
-    const url = 'http://localhost:4000/api/v1/channels/1/messages';
+    const url = '/api/v1/channels/1/messages';
     const response = await axios.post(url, message);
-    dispatch(addMessageSuccess({ message: response.data }));
+    //dispatch(addMessageSuccess({ message: response.data }));
   } catch (e) {
     dispatch(addMessageFailure());
     throw e;
