@@ -13,7 +13,7 @@ const renderChannels = data => (
 );
 
 const Channels = () => (
-  <div className="col-3">
+  <div className="col-sm-3 d-none d-md-block">
     {renderChannels(channels)}
   </div>
 );

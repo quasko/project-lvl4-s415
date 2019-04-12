@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { css } from 'glamor';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import io from 'socket.io-client';
+import * as actions from '../actions';
+
 // const Chat = () => (
 //   <div className="col-12 border messages">
 //     #General messages
@@ -24,6 +27,7 @@ const Chat = (props) => {
     height: '390',
     width: '100%',
   });
+  
   return (
     <div className="col-12 border messages">
       #General messages

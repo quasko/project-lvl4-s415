@@ -9,6 +9,8 @@ export const fetchMessagesRequest = createAction('MESSAGE_FETCH_REQUEST');
 export const fetchMessagesSuccess = createAction('MESSAGE_FETCH_SUCCESS');
 export const fetchMessagesFailure = createAction('MESSAGE_FETCH_FAILURE');
 
+export const pushMessageSuccess = createAction('MESSAGE_PUSH_SUCCESS');
+
 export const addMessage = message => async (dispatch) => {
   dispatch(addMessageRequest());
   try {
@@ -19,6 +21,10 @@ export const addMessage = message => async (dispatch) => {
     dispatch(addMessageFailure());
     throw e;
   }
+};
+
+export const pushMessage = (message, name) => (dispatch) => {
+  dispatch(pushMessageSuccess({ message, name }));
 };
 
 export const fetchMessages = messages => (dispatch) => {

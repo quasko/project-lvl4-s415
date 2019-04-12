@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div className="row">
       <Channels />
-      <div className="col-9 d-flex flex-column">
+      <div className="col-sm-12 col-md-9 d-flex flex-column">
         <Chat />
         <MessageForm />
       </div>

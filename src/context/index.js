@@ -1,6 +1,4 @@
 import React from 'react';
-import faker from 'faker';
+import cookies from 'js-cookie';
 
-const userName = faker.name.firstName();
-
-export default React.createContext(userName);
+export default React.createContext(cookies.get().userName);

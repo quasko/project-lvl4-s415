@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import * as actions from '../actions';
 import UserContext from '../context';
+import io from 'socket.io-client';
 
 const mapStateToProps = (state) => {
   const props = {
@@ -22,6 +23,7 @@ class MessageForm extends React.Component {
   onSubmit = async ({ text }) => {
     const { addMessage, reset } = this.props;
     const { context } = this;
+
     try {
       await addMessage({
         data: {

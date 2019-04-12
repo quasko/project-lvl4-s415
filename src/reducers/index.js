@@ -15,6 +15,9 @@ const messageAddingState = handleActions(
     [actions.addMessageFailure]() {
       return 'failed';
     },
+    [actions.pushMessage]() {
+      return 'pushed';
+    },
   }, 'none',
 );
 
@@ -24,7 +27,6 @@ const messages = handleActions({
     const { attributes } = message.data;
 
     const { byId, allIds } = state;
-    
     return {
       byId: { ...byId, [attributes.id]: attributes },
       allIds: [...allIds, attributes.id],
@@ -34,6 +36,20 @@ const messages = handleActions({
     return {
       byId: _.keyBy(payload.messages, 'id'),
       allIds: payload.messages.map(m => m.id),
+    };
+  },
+  [actions.pushMessageSuccess](state, { payload: { message, name } }) {
+    const { attributes } = message.data;
+
+    if (attributes.message.name === name) {
+      return state;
+    }
+
+    const { byId, allIds } = state;
+
+    return {
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds: [...allIds, attributes.id],
     };
   },
 }, { byId: {}, allIds: [] });
