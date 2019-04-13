@@ -17,6 +17,9 @@ const actionCreators = {
   addMessage: actions.addMessage,
 };
 @connect(mapStateToProps, actionCreators)
+@reduxForm({
+  form: 'newMessage',
+})
 class MessageForm extends React.Component {
   static contextType = UserContext;
 
@@ -29,7 +32,6 @@ class MessageForm extends React.Component {
         data: {
           attributes: {
             message: {
-              //id: _.uniqueId(),
               date: new Date(),
               name: context,
               text,
@@ -54,8 +56,4 @@ class MessageForm extends React.Component {
   }
 }
 
-const ConnectedMessageForm = MessageForm;
-
-export default reduxForm({
-  form: 'newMessage',
-})(ConnectedMessageForm);
+export default MessageForm;

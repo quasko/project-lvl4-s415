@@ -21,17 +21,18 @@ const messageAddingState = handleActions(
   }, 'none',
 );
 
+const socketState = handleActions(
+  {
+    [actions.onConnect]() {
+      return 'online';
+    },
+    [actions.onDisconnect]() {
+      return 'offline';
+    },
+  }, 'none',
+);
 
 const messages = handleActions({
-  [actions.addMessageSuccess](state, { payload: { message } }) {
-    const { attributes } = message.data;
-
-    const { byId, allIds } = state;
-    return {
-      byId: { ...byId, [attributes.id]: attributes },
-      allIds: [...allIds, attributes.id],
-    };
-  },
   [actions.fetchMessagesSuccess](state, { payload }) {
     return {
       byId: _.keyBy(payload.messages, 'id'),
@@ -53,5 +54,6 @@ const messages = handleActions({
 export default combineReducers({
   messageAddingState,
   messages,
+  socketState,
   form: formReducer,
 });

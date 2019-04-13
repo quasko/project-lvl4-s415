@@ -1,18 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { css } from 'glamor';
+import cn from 'classnames';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 const mapStateToProps = (state) => {
-  const { messagesFetchingState, messages: { byId, allIds } } = state;
+  const { messagesFetchingState, messages: { byId, allIds }, socketState } = state;
   const messages = allIds.map(id => byId[id]);
-  return { messages, messagesFetchingState };
+  return { messages, messagesFetchingState, socketState };
 };
 
 @connect(mapStateToProps)
 class Chat extends React.Component {
   render() {
-    const { messages, messagesFetchingState } = this.props;
+    const { messages, messagesFetchingState, socketState } = this.props;
     if (messagesFetchingState === 'failed') {
       return (
         <span>Please, reload page!</span>
@@ -23,9 +24,19 @@ class Chat extends React.Component {
       width: '100%',
     });
 
+    const socketStateClass = cn({
+      'text-success': socketState === 'online',
+      'text-danger': socketState === 'offline',
+    });
+
     return (
-      <div className="col-12 border messages">
-        #General messages
+      <div className="col-12 border messages p-0">
+        <div className="d-flex justify-content-between pl-2 pr-2">
+          <p>#General messages</p>
+          <p className={socketStateClass}>{socketState}</p>
+        </div>
+        
+        
         <ScrollToBottom className={classScroll}>
           {messages.map(({ message, id }) => (
             <p key={id}>{ `${message.name}: ${message.text}` }</p>
