@@ -5,9 +5,11 @@ import cn from 'classnames';
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 const mapStateToProps = (state) => {
-  const { messagesFetchingState, messages: { byId, allIds }, socketState } = state;
-  const messages = allIds.map(id => byId[id]);
-  return { messages, messagesFetchingState, socketState };
+  const { messagesFetchingState, messages: { byId, allIds }, socketState, activeChannelId } = state;
+
+  const messages = allIds.map(id => byId[id]).filter(m => m.channelId === activeChannelId);
+
+  return { messages, messagesFetchingState, socketState, activeChannelId };
 };
 
 @connect(mapStateToProps)
@@ -20,7 +22,7 @@ class Chat extends React.Component {
       );
     }
     const classScroll = css({
-      height: '390',
+      height: '400',
       width: '100%',
     });
 
@@ -30,13 +32,11 @@ class Chat extends React.Component {
     });
 
     return (
-      <div className="col-12 border messages p-0">
+      <div className="col-12 border p-0">
         <div className="d-flex justify-content-between pl-2 pr-2">
           <p>#General messages</p>
           <p className={socketStateClass}>{socketState}</p>
         </div>
-        
-        
         <ScrollToBottom className={classScroll}>
           {messages.map(({ message, id }) => (
             <p key={id}>{ `${message.name}: ${message.text}` }</p>

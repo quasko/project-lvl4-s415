@@ -7,15 +7,14 @@ import UserContext from '../context';
 import io from 'socket.io-client';
 
 const mapStateToProps = (state) => {
-  const props = {
-    message: state.message,
-  };
-  return props;
+  const { activeChannelId } = state;
+  return { activeChannelId };
 };
 
 const actionCreators = {
   addMessage: actions.addMessage,
 };
+
 @connect(mapStateToProps, actionCreators)
 @reduxForm({
   form: 'newMessage',
@@ -24,7 +23,7 @@ class MessageForm extends React.Component {
   static contextType = UserContext;
 
   onSubmit = async ({ text }) => {
-    const { addMessage, reset } = this.props;
+    const { addMessage, reset, activeChannelId } = this.props;
     const { context } = this;
 
     try {
@@ -38,7 +37,7 @@ class MessageForm extends React.Component {
             },
           },
         },
-      });
+      }, activeChannelId);
     } catch (e) {
       throw new SubmissionError(e);
     }

@@ -21,6 +21,35 @@ const messageAddingState = handleActions(
   }, 'none',
 );
 
+const channelAddingState = handleActions(
+  {
+    [actions.addChannelRequest]() {
+      return 'requested';
+    },
+    [actions.addChannelSuccess]() {
+      return 'finished';
+    },
+    [actions.addChannelFailure]() {
+      return 'failed';
+    },
+  }, 'none',
+);
+
+const channelsModalState = handleActions(
+  {
+    [actions.openChannelsModal]() {
+      return {
+        open: true,
+      };
+    },
+    [actions.closeChannelsModal]() {
+      return {
+        open: false,
+      };
+    },
+  }, { open: false },
+);
+
 const socketState = handleActions(
   {
     [actions.onConnect]() {
@@ -30,6 +59,14 @@ const socketState = handleActions(
       return 'offline';
     },
   }, 'none',
+);
+
+const activeChannelId = handleActions(
+  {
+    [actions.setActiveChannelAction](state, { payload }) {
+      return payload.id;
+    },
+  }, 1,
 );
 
 const messages = handleActions({
@@ -51,9 +88,31 @@ const messages = handleActions({
   },
 }, { byId: {}, allIds: [] });
 
+const channels = handleActions({
+  [actions.fetchChannelsSuccess](state, { payload }) {
+    return {
+      byId: _.keyBy(payload.channels, 'id'),
+      allIds: payload.channels.map(m => m.id),
+    };
+  },
+  [actions.addChannelSuccess](state, { payload: { channel } }) {
+    const { attributes } = channel.data;
+    const { byId, allIds } = state;
+
+    return {
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds: [...allIds, attributes.id],
+    };
+  },
+}, { byId: {}, allIds: [] });
+
 export default combineReducers({
   messageAddingState,
   messages,
+  channelAddingState,
+  channels,
   socketState,
+  activeChannelId,
+  channelsModalState,
   form: formReducer,
 });

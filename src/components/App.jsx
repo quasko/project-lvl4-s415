@@ -12,6 +12,7 @@ const actionCreators = {
   pushMessage: actions.pushMessage,
   onConnect: actions.onConnect,
   onDisconnect: actions.onDisconnect,
+  fetchChannels: actions.fetchChannels,
 };
 
 @connect(mapStateToProps, actionCreators)

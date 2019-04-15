@@ -7,11 +7,11 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 
-import { messages } from 'gon';
+import { messages, channels } from 'gon';
 
 import reducers from './reducers';
 import App from './components/App';
-import { fetchMessages } from './actions';
+import { fetchMessages, fetchChannels } from './actions';
 
 
 const store = createStore(
@@ -24,6 +24,7 @@ const store = createStore(
 );
 
 store.dispatch(fetchMessages(messages));
+store.dispatch(fetchChannels(channels));
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
