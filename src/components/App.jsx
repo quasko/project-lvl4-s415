@@ -9,10 +9,13 @@ import * as actions from '../actions';
 const mapStateToProps = () => ({});
 
 const actionCreators = {
-  pushMessage: actions.pushMessage,
+  addMessage: actions.addMessage,
+  addChannel: actions.addChannel,
   onConnect: actions.onConnect,
   onDisconnect: actions.onDisconnect,
   fetchChannels: actions.fetchChannels,
+  renameChannel: actions.renameChannel,
+  removeChannel: actions.removeChannel,
 };
 
 @connect(mapStateToProps, actionCreators)
@@ -21,9 +24,28 @@ class App extends React.Component {
     super(props);
 
     const socket = io();
-    const { pushMessage, onConnect, onDisconnect } = this.props;
-    socket.on('newMessage', (m) => {
-      pushMessage(m);
+    const {
+      addMessage,
+      onConnect,
+      onDisconnect,
+      addChannel,
+      renameChannel,
+      removeChannel,
+    } = this.props;
+    socket.on('newMessage', (message) => {
+      addMessage(message);
+    });
+
+    socket.on('newChannel', (channel) => {
+      addChannel(channel);
+    });
+
+    socket.on('renameChannel', (channel) => {
+      renameChannel(channel);
+    });
+
+    socket.on('removeChannel', (id) => {
+      removeChannel(id);
     });
 
     socket.on('connect', () => {

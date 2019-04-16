@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import * as actions from '../actions';
-import gon from 'gon';
-import { Button, Modal } from 'react-bootstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
 import ChannelModal from './ChannelModal';
+
 
 const mapStateToProps = (state) => {
   const { channels: { byId, allIds }, activeChannelId, channelsModalState } = state;
@@ -15,7 +13,7 @@ const mapStateToProps = (state) => {
 
 const actionCreators = {
   setActiveChannel: actions.setActiveChannel,
-  openChannelsModal: actions.openChannelsModal,
+  openModal: actions.openModal,
   closeChannelsModal: actions.closeChannelsModal,
 };
 
@@ -28,19 +26,17 @@ class Channels extends React.Component {
   }
 
   addChannel = () => {
-    const { openChannelsModal } = this.props;
-    console.log('add');
-    openChannelsModal();
+    const { openModal } = this.props;
+    openModal({ mode: 'add' });
   }
 
   closeModal = () => {
     const { closeChannelsModal } = this.props;
-    console.log('close');
     closeChannelsModal();
   }
 
   submitChannel = () => {
-    console.log('submit');
+    
   }
 
   render() {
@@ -55,7 +51,11 @@ class Channels extends React.Component {
               'list-group-item-action': true,
               active: id === activeChannelId,
             });
-            return <a className={channelClass} key={id} href={`#${name}`} onClick={this.onChannelClick(id)}>{`#${name}`}</a>;
+            return (
+              <a className={channelClass} key={id} onClick={this.onChannelClick(id)} href={`#${name}`}>
+                {`#${name}`}
+              </a>
+            );
           })}
         </div>
         <button type="button" className="btn btn-outline-secondary" onClick={this.addChannel}>Add Channel</button>

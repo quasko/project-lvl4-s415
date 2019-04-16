@@ -4,32 +4,32 @@ import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
-const messageAddingState = handleActions(
+const messagePostState = handleActions(
   {
-    [actions.addMessageRequest]() {
+    [actions.postMessageRequest]() {
       return 'requested';
     },
-    [actions.addMessageSuccess]() {
+    [actions.postMessageSuccess]() {
       return 'finished';
     },
-    [actions.addMessageFailure]() {
+    [actions.postMessageFailure]() {
       return 'failed';
     },
-    [actions.pushMessage]() {
-      return 'pushed';
+    [actions.addMessage]() {
+      return 'added';
     },
   }, 'none',
 );
 
-const channelAddingState = handleActions(
+const channelPostState = handleActions(
   {
-    [actions.addChannelRequest]() {
+    [actions.postChannelRequest]() {
       return 'requested';
     },
-    [actions.addChannelSuccess]() {
+    [actions.postChannelSuccess]() {
       return 'finished';
     },
-    [actions.addChannelFailure]() {
+    [actions.postChannelFailure]() {
       return 'failed';
     },
   }, 'none',
@@ -37,9 +37,10 @@ const channelAddingState = handleActions(
 
 const channelsModalState = handleActions(
   {
-    [actions.openChannelsModal]() {
+    [actions.openChannelsModal](state, { payload: { mode } }) {
       return {
         open: true,
+        mode,
       };
     },
     [actions.closeChannelsModal]() {
@@ -66,6 +67,9 @@ const activeChannelId = handleActions(
     [actions.setActiveChannelAction](state, { payload }) {
       return payload.id;
     },
+    [actions.removeChannelSuccess]() {
+      return 1;
+    },
   }, 1,
 );
 
@@ -76,7 +80,7 @@ const messages = handleActions({
       allIds: payload.messages.map(m => m.id),
     };
   },
-  [actions.pushMessageSuccess](state, { payload: { message } }) {
+  [actions.addMessageAction](state, { payload: { message } }) {
     const { attributes } = message.data;
 
     const { byId, allIds } = state;
@@ -84,6 +88,16 @@ const messages = handleActions({
     return {
       byId: { ...byId, [attributes.id]: attributes },
       allIds: [...allIds, attributes.id],
+    };
+  },
+  [actions.removeChannelSuccess](state, { payload: { data } }) {
+    const { id } = data;
+    const { byId } = state;
+    const newById = _.omitBy(byId, item => item.channelId === id);
+    const newAllIds = Object.keys(newById);
+    return {
+      byId: newById,
+      allIds: newAllIds,
     };
   },
 }, { byId: {}, allIds: [] });
@@ -95,8 +109,8 @@ const channels = handleActions({
       allIds: payload.channels.map(m => m.id),
     };
   },
-  [actions.addChannelSuccess](state, { payload: { channel } }) {
-    const { attributes } = channel.data;
+  [actions.addChannelAction](state, { payload: { data } }) {
+    const { attributes } = data;
     const { byId, allIds } = state;
 
     return {
@@ -104,12 +118,28 @@ const channels = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
+  [actions.renameChannelSuccess](state, { payload: { data } }) {
+    const { attributes } = data;
+    const { byId, allIds } = state;
+    return {
+      byId: { ...byId, [attributes.id]: attributes },
+      allIds,
+    };
+  },
+  [actions.removeChannelSuccess](state, { payload: { data } }) {
+    const { id } = data;
+    const { byId, allIds } = state;
+    return {
+      byId: _.omit(byId, id),
+      allIds: _.without(allIds, id),
+    };
+  },
 }, { byId: {}, allIds: [] });
 
 export default combineReducers({
-  messageAddingState,
+  messagePostState,
   messages,
-  channelAddingState,
+  channelPostState,
   channels,
   socketState,
   activeChannelId,

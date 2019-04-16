@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 };
 
 const actionCreators = {
-  addMessage: actions.addMessage,
+  postMessage: actions.postMessage,
 };
 
 @connect(mapStateToProps, actionCreators)
@@ -23,11 +23,11 @@ class MessageForm extends React.Component {
   static contextType = UserContext;
 
   onSubmit = async ({ text }) => {
-    const { addMessage, reset, activeChannelId } = this.props;
+    const { postMessage, reset, activeChannelId } = this.props;
     const { context } = this;
 
     try {
-      await addMessage({
+      await postMessage({
         data: {
           attributes: {
             message: {
