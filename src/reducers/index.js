@@ -4,48 +4,19 @@ import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
-const messagePostState = handleActions(
-  {
-    [actions.postMessageRequest]() {
-      return 'requested';
-    },
-    [actions.postMessageSuccess]() {
-      return 'finished';
-    },
-    [actions.postMessageFailure]() {
-      return 'failed';
-    },
-    [actions.addMessage]() {
-      return 'added';
-    },
-  }, 'none',
-);
-
-const channelPostState = handleActions(
-  {
-    [actions.postChannelRequest]() {
-      return 'requested';
-    },
-    [actions.postChannelSuccess]() {
-      return 'finished';
-    },
-    [actions.postChannelFailure]() {
-      return 'failed';
-    },
-  }, 'none',
-);
-
 const channelsModalState = handleActions(
   {
-    [actions.openChannelsModal](state, { payload: { mode } }) {
+    [actions.openModal](state, { payload: { mode } }) {
       return {
         open: true,
         mode,
       };
     },
-    [actions.closeChannelsModal]() {
+    [actions.closeModal](state) {
+      const { mode } = state;
       return {
         open: false,
+        mode,
       };
     },
   }, { open: false },
@@ -53,10 +24,10 @@ const channelsModalState = handleActions(
 
 const socketState = handleActions(
   {
-    [actions.onConnect]() {
+    [actions.connectSocket]() {
       return 'online';
     },
-    [actions.onDisconnect]() {
+    [actions.disconnectSocket]() {
       return 'offline';
     },
   }, 'none',
@@ -64,24 +35,24 @@ const socketState = handleActions(
 
 const activeChannelId = handleActions(
   {
-    [actions.setActiveChannelAction](state, { payload }) {
+    [actions.setActiveChannel](state, { payload }) {
       return payload.id;
     },
-    [actions.removeChannelSuccess]() {
+    [actions.removeChannel]() {
       return 1;
     },
   }, 1,
 );
 
 const messages = handleActions({
-  [actions.fetchMessagesSuccess](state, { payload }) {
+  [actions.fetchMessages](state, { payload }) {
     return {
       byId: _.keyBy(payload.messages, 'id'),
       allIds: payload.messages.map(m => m.id),
     };
   },
-  [actions.addMessageAction](state, { payload: { message } }) {
-    const { attributes } = message.data;
+  [actions.addMessage](state, { payload: { data } }) {
+    const { attributes } = data;
 
     const { byId, allIds } = state;
 
@@ -90,11 +61,11 @@ const messages = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
-  [actions.removeChannelSuccess](state, { payload: { data } }) {
+  [actions.removeChannel](state, { payload: { data } }) {
     const { id } = data;
-    const { byId } = state;
+    const { byId, allIds } = state;
     const newById = _.omitBy(byId, item => item.channelId === id);
-    const newAllIds = Object.keys(newById);
+    const newAllIds = allIds.filter(item => newById[item]);
     return {
       byId: newById,
       allIds: newAllIds,
@@ -103,13 +74,13 @@ const messages = handleActions({
 }, { byId: {}, allIds: [] });
 
 const channels = handleActions({
-  [actions.fetchChannelsSuccess](state, { payload }) {
+  [actions.fetchChannels](state, { payload }) {
     return {
       byId: _.keyBy(payload.channels, 'id'),
       allIds: payload.channels.map(m => m.id),
     };
   },
-  [actions.addChannelAction](state, { payload: { data } }) {
+  [actions.addChannel](state, { payload: { data } }) {
     const { attributes } = data;
     const { byId, allIds } = state;
 
@@ -118,7 +89,7 @@ const channels = handleActions({
       allIds: [...allIds, attributes.id],
     };
   },
-  [actions.renameChannelSuccess](state, { payload: { data } }) {
+  [actions.renameChannel](state, { payload: { data } }) {
     const { attributes } = data;
     const { byId, allIds } = state;
     return {
@@ -126,7 +97,7 @@ const channels = handleActions({
       allIds,
     };
   },
-  [actions.removeChannelSuccess](state, { payload: { data } }) {
+  [actions.removeChannel](state, { payload: { data } }) {
     const { id } = data;
     const { byId, allIds } = state;
     return {
@@ -137,9 +108,7 @@ const channels = handleActions({
 }, { byId: {}, allIds: [] });
 
 export default combineReducers({
-  messagePostState,
   messages,
-  channelPostState,
   channels,
   socketState,
   activeChannelId,

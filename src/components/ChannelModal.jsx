@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import upperFirst from 'lodash/upperFirst';
 import { Button, Modal } from 'react-bootstrap';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
-import * as actions from '../actions';
+import * as actionCreators from '../actions';
 
 const mapStateToProps = (state) => {
   const { channelsModalState: { mode }, activeChannelId, channels: { byId } } = state;
@@ -19,18 +19,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const actionCreators = {
-  postChannel: actions.postChannel,
-  patchChannel: actions.patchChannel,
-  deleteChannel: actions.deleteChannel,
-};
-
 @connect(mapStateToProps, actionCreators)
 @reduxForm({
   form: 'channel',
 })
 class ChannelModal extends React.Component {
-  onAdd = async ({ text }) => {
+  handleAdd = async ({ text }) => {
     const { closeModal, reset, postChannel } = this.props;
     try {
       await postChannel({
@@ -47,7 +41,7 @@ class ChannelModal extends React.Component {
     reset();
   }
 
-  onRename = async ({ text }) => {
+  handleRename = async ({ text }) => {
     const {
       closeModal,
       reset,
@@ -71,7 +65,7 @@ class ChannelModal extends React.Component {
     reset();
   }
 
-  onDelete = () => {
+  handleDelete = () => {
     const {
       closeModal,
       reset,
@@ -85,9 +79,9 @@ class ChannelModal extends React.Component {
 
   handleSubmit = mode => ({ text }) => {
     const channelAction = {
-      add: this.onAdd,
-      rename: this.onRename,
-      delete: this.onDelete,
+      add: this.handleAdd,
+      rename: this.handleRename,
+      delete: this.handleDelete,
     };
     channelAction[mode]({ text });
   }

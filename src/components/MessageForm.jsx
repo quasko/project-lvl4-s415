@@ -1,18 +1,12 @@
 import React from 'react';
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
-import * as actions from '../actions';
+import * as actionCreators from '../actions';
 import UserContext from '../context';
-import io from 'socket.io-client';
 
 const mapStateToProps = (state) => {
   const { activeChannelId } = state;
   return { activeChannelId };
-};
-
-const actionCreators = {
-  postMessage: actions.postMessage,
 };
 
 @connect(mapStateToProps, actionCreators)
@@ -22,7 +16,7 @@ const actionCreators = {
 class MessageForm extends React.Component {
   static contextType = UserContext;
 
-  onSubmit = async ({ text }) => {
+  handleSubmit = async ({ text }) => {
     const { postMessage, reset, activeChannelId } = this.props;
     const { context } = this;
 
@@ -47,7 +41,7 @@ class MessageForm extends React.Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     return (
-      <form className="d-flex" onSubmit={handleSubmit(this.onSubmit)}>
+      <form className="d-flex" onSubmit={handleSubmit(this.handleSubmit)}>
         <Field className="border w-100" name="text" required component="input" type="text" />
         <button type="submit" className="btn btn-primary" disabled={submitting}>Add</button>
       </form>

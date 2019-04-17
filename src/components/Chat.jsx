@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { css } from 'glamor';
 import cn from 'classnames';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import ChannelModal from './ChannelModal';
-import * as actions from '../actions';
+import * as actionCreators from '../actions';
 
 const mapStateToProps = (state) => {
   const {
@@ -27,27 +26,16 @@ const mapStateToProps = (state) => {
   };
 };
 
-const actionCreators = {
-  openModal: actions.openModal,
-  closeChannelsModal: actions.closeChannelsModal,
-  patchChannel: actions.patchChannel,
-};
-
 @connect(mapStateToProps, actionCreators)
 class Chat extends React.Component {
-  onRenameClick = () => {
+  handleRename = () => {
     const { openModal, activeChannelId } = this.props;
     openModal({ mode: 'rename', id: activeChannelId });
   }
 
-  onDeleteClick = () => {
+  handleDelete = () => {
     const { openModal, activeChannelId } = this.props;
     openModal({ mode: 'delete', id: activeChannelId });
-  }
-
-
-  renderChannelButtons = () => {
-
   }
 
   render() {
@@ -74,7 +62,6 @@ class Chat extends React.Component {
       'ml-auto': true,
     });
 
-    
     return (
       <div className="col-12 border p-0">
         <div className="d-flex align-items-start pl-2 pr-2">
@@ -83,8 +70,8 @@ class Chat extends React.Component {
           </p>
           {removable && (
             <>
-              <button type="button" className="btn btn-outline-secondary btn-xs p-0 pl-1 pr-1 mr-2" onClick={this.onRenameClick}>rename channel</button>
-              <button type="button" className="btn btn-outline-danger btn-xs p-0 pl-1 pr-1" onClick={this.onDeleteClick}>delete channel</button>
+              <button type="button" className="btn btn-outline-secondary btn-xs p-0 pl-1 pr-1 mr-2" onClick={this.handleRename}>rename channel</button>
+              <button type="button" className="btn btn-outline-danger btn-xs p-0 pl-1 pr-1" onClick={this.handleDelete}>delete channel</button>
             </>
           )}
           <p className={socketStateClass}>{socketState}</p>
