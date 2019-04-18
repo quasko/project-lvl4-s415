@@ -2,7 +2,7 @@
   "name": "frontend_l4_chat_project",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/bin/slack.js",
   "bin": {
     "slack": "dist/bin/slack.js"
   },
@@ -15,7 +15,7 @@
     "build-app": "npx webpack -p --env production",
     "build": "npm run build-app && npm run build-server",
     "postinstall": "npm run build",
-    "start": "npx nodemon --exec npx babel-node server/bin/slack.js"
+    "start": "node dist/bin/slack.js"
   },
   "repository": {
     "type": "git",
