@@ -3,18 +3,21 @@
 [![Build Status](https://travis-ci.org/quasko/project-lvl4-s415.svg?branch=master)](https://travis-ci.org/quasko/project-lvl4-s415)
 
 ### Описание
-Необходимо разработать аналог Slack (очень упрощенную версию). Основные возможности системы:
+Очень упрощенная версия Slack. Основные возможности системы:
 
   * Наличие каналов и управление ими (удаление, переименование)
   * Чат в каждом канале работающий в режиме реального времени
 
-### С чем придется столкнуться:
+### Используемые технологии:
 
   * Ajax, REST
   * Websockets
   * React + Redux + Forms
   * Bootstrap on React
   * Webpack
+  * Koa.js
+  * Pug
+
 
 ### Demo
 
